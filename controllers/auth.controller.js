@@ -26,6 +26,28 @@ export const register = async (req, res, next) => {
   }
 };
 
+export const registerAdmin = async (req, res, next) => {
+  try {
+    const role = await Role.find({});
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const newUser = new User({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      username: req.body.username,
+      email: req.body.email,
+      password: hashPassword,
+      roles: role,
+      isAdmin: true,
+    });
+
+    await newUser.save();
+    return next(CreateSuccess(200, "Admin Registered Successfully"));
+  } catch (error) {
+    return next(CreateError(500, error.message));
+  }
+};
+
 export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email }).populate(
