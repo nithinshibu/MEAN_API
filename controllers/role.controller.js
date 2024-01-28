@@ -39,7 +39,7 @@ export const updateRole = async (req, res, next) => {
 export const getAllRoles = async (req, res, next) => {
   try {
     const roles = await Role.find({});
-    return res.status(200).send(roles);
+    return next(CreateSuccess(200, "Roles Fetched Successfully", roles));
   } catch (error) {
     return next(CreateError(500, error.message));
   }
